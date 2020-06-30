@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Vehicle		KEYWORD1
+direction	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+setSpeed	KEYWORD2
+setDirection	KEYWORD2
+readEncoder	KEYWORD2
+setupVehicle	KEYWORD2
+enableMotors	KEYWORD2
+resetEncoder	KEYWORD2
+advancedEncoder	KEYWORD2
+batteryVoltage	KEYWORD2
+motorCurrent	KEYWORD2
+supplyCurrent	KEYWORD2
+
+######################################
+# Constants (LITERAL1)
+#######################################
+LEFT		LITERAL1
+RIGHT		LITERAL1
+BOTH		LITERAL1
+forwards	LITERAL1
+backwards	LITERAL1
