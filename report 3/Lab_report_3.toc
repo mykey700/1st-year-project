@@ -1,0 +1,32 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
+\contentsline {section}{\numberline {1.1}Raspberry pi}{1}{section.1.1}% 
+\contentsline {section}{\numberline {1.2}Open CV}{1}{section.1.2}% 
+\contentsline {chapter}{\numberline {2}Physical Systems}{3}{chapter.2}% 
+\contentsline {section}{\numberline {2.1}Audio Amplifier}{3}{section.2.1}% 
+\contentsline {subsection}{\numberline {2.1.1}Circuit}{4}{subsection.2.1.1}% 
+\contentsline {section}{\numberline {2.2}I2C level shifter}{4}{section.2.2}% 
+\contentsline {section}{\numberline {2.3}Sensors with Arduino}{5}{section.2.3}% 
+\contentsline {section}{\numberline {2.4}Raspberry Pi \& Camera}{6}{section.2.4}% 
+\contentsline {subsection}{\numberline {2.4.1}setup}{6}{subsection.2.4.1}% 
+\contentsline {subsection}{\numberline {2.4.2}i2c communication}{6}{subsection.2.4.2}% 
+\contentsline {section}{\numberline {2.5}Motor Control}{7}{section.2.5}% 
+\contentsline {chapter}{\numberline {3}Line Following System}{8}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}Version 1}{8}{section.3.1}% 
+\contentsline {section}{\numberline {3.2}Version 2}{9}{section.3.2}% 
+\contentsline {chapter}{\numberline {4}Symbol Detector Systems}{10}{chapter.4}% 
+\contentsline {chapter}{\numberline {5}Other Systems using Open CV}{12}{chapter.5}% 
+\contentsline {section}{\numberline {5.1}Stop Light Detection}{12}{section.5.1}% 
+\contentsline {section}{\numberline {5.2}Shape Counting}{12}{section.5.2}% 
+\contentsline {chapter}{\numberline {6}Conclusion}{14}{chapter.6}% 
+\contentsline {section}{\numberline {6.1}Potential Improvements}{14}{section.6.1}% 
+\contentsline {section}{\numberline {6.2}SAE levels of Autonomy}{15}{section.6.2}% 
+\contentsline {chapter}{Apendix}{i}{chapter*.24}% 
+\contentsline {section}{\numberline {7.1}wifi access}{i}{section.7.1}% 
+\contentsline {section}{\numberline {7.2}Open CV task}{ii}{section.7.2}% 
+\contentsline {section}{\numberline {7.3}Motor control arduino}{vi}{section.7.3}% 
+\contentsline {section}{\numberline {7.4}Motor control Pi}{xii}{section.7.4}% 
+\contentsline {section}{\numberline {7.5}sensors}{xx}{section.7.5}% 
+\contentsline {section}{\numberline {7.6}Line following}{xxiv}{section.7.6}% 
+\contentsline {section}{\numberline {7.7}Symbol detect}{xxix}{section.7.7}% 
+\contentsline {section}{\numberline {7.8}Shape counter}{xxxvi}{section.7.8}% 
+\contentsline {section}{\numberline {7.9}Stop light detection}{xlii}{section.7.9}% 

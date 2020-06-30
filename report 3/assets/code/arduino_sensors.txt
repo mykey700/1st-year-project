@@ -1,0 +1,157 @@
+#include <Wire.h>
+
+#include <Servo.h>
+
+#include <NewPing.h>
+
+Servo myservo;  // create servo object to control a servo
+
+int sensor = -1;
+
+#define SONAR_NUM 2      // Number of sensors.
+#define MAX_DISTANCE 200 // Maximum distance (in cm) to ping.
+
+#define BACK_SENSOR 0
+#define LEFT_SENSOR 1
+
+NewPing sonar[SONAR_NUM] = {   // Sensor object array.
+  NewPing(2, 3, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
+  NewPing(4, 5, MAX_DISTANCE)
+};
+
+int back_distance = 0;
+int left_distance = 0;
+
+
+
+void setup() {
+  Wire.begin(8);                // join i2c bus with address #8
+  Wire.onRequest(requestEvent); // register event
+  Wire.onReceive(receiveEvent); // register event
+  Serial.begin(9600);           // start serial for output
+
+  myservo.attach(6);  // attaches the servo on pin 9 to the servo object
+}
+
+void loop() {
+  left_distance = sonar[LEFT_SENSOR].ping_cm();
+  back_distance = sonar[BACK_SENSOR].ping_cm();
+}
+
+// function that executes whenever data is requested by master
+// this function is registered as an event, see setup()
+void requestEvent() {
+  Serial.print("request");
+
+  if (sensor != -1) {
+    switch (sensor) {
+      case BACK_SENSOR:
+          Serial.print("back:");
+
+        Wire.write(back_distance);
+        break;
+      case LEFT_SENSOR:
+          Serial.print("left:");
+
+        Wire.write(left_distance);
+        break;
+    }
+    sensor = -1;
+  }
+
+}
+
+// function that executes whenever data is received from master
+// this function is registered as an event, see setup()
+void receiveEvent(int howMany) {
+  char flag = 0;
+  int input[howMany - 1];
+  int current = 0;
+  while (Wire.available()) { // loop through all but the last
+    Serial.print("current:");
+    Serial.println(current);
+    if (current == 0) {
+      flag = Wire.read();
+      current++;
+    } else {
+      input[current] = Wire.read(); // receive byte as a character
+      Serial.println(input[current]);         // print the character
+      current++;
+    }
+  }
+
+  Serial.print("flag:{");
+  Serial.print(flag);
+  Serial.println("}");
+
+  if (flag == 's') {
+    Serial.println("setting servo:");
+    int val = input[1];
+    setServo(val);
+  } else  if (flag == 'b') {
+    Serial.println("getting back sensor:");
+    sensor = BACK_SENSOR;
+    delay(100);
+  } else  if (flag == 'l') {
+    Serial.println("getting left sensor:");
+    sensor = LEFT_SENSOR;
+  }
+
+}
+
+void setServo(int val) {
+  Serial.print("val: ");
+  Serial.println(val);
+
+  myservo.write(val);                  // sets the servo position
+  delay(15);                           // waits for the servo to get there
+}
+
+int getInt(int input[], int in_size) {
+  int mult = 1;
+  int sum = 0;
+  int in_int = 0;
+  int expon = 0;
+
+  for (int i = 0; i < in_size; i++) {
+    //    Serial.print("I: ");
+    //    Serial.println(i);
+
+    if (input[i] == 10) {
+      return sum;
+    }
+    expon = (in_size - 2) - i;
+    //    Serial.print("expon: ");
+    //    Serial.println(expon);
+
+    mult = power(10, expon);
+    //    Serial.print("mult: ");
+    //    Serial.println(mult);
+
+    in_int = input[i] - 48;
+    //    Serial.print("int: ");
+    //    Serial.println(in_int);
+
+    sum = sum + (in_int * mult);
+    //    Serial.print("sum: ");
+    //    Serial.println(sum);
+
+  }
+
+  return sum;
+
+}
+
+int power(int bace, int expon) {
+  if (expon == 0) {
+    return 1;
+  }
+  int sum = bace;
+  //Serial.println(sum);
+  for (int i = 1; i <= (expon - 1); i++) {
+    sum = sum * bace;
+    //Serial.println(sum);
+  }
+
+  return sum;
+}

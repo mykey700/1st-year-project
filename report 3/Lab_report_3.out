@@ -1,0 +1,32 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Raspberry pi}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Open CV}{chapter.1}% 3
+\BOOKMARK [0][-]{chapter.2}{Physical Systems}{}% 4
+\BOOKMARK [1][-]{section.2.1}{Audio Amplifier}{chapter.2}% 5
+\BOOKMARK [2][-]{subsection.2.1.1}{Circuit}{section.2.1}% 6
+\BOOKMARK [1][-]{section.2.2}{I2C level shifter}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.3}{Sensors with Arduino}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.4}{Raspberry Pi \046 Camera}{chapter.2}% 9
+\BOOKMARK [2][-]{subsection.2.4.1}{setup}{section.2.4}% 10
+\BOOKMARK [2][-]{subsection.2.4.2}{i2c communication}{section.2.4}% 11
+\BOOKMARK [1][-]{section.2.5}{Motor Control}{chapter.2}% 12
+\BOOKMARK [0][-]{chapter.3}{Line Following System}{}% 13
+\BOOKMARK [1][-]{section.3.1}{Version 1}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.2}{Version 2}{chapter.3}% 15
+\BOOKMARK [0][-]{chapter.4}{Symbol Detector Systems}{}% 16
+\BOOKMARK [0][-]{chapter.5}{Other Systems using Open CV}{}% 17
+\BOOKMARK [1][-]{section.5.1}{Stop Light Detection}{chapter.5}% 18
+\BOOKMARK [1][-]{section.5.2}{Shape Counting}{chapter.5}% 19
+\BOOKMARK [0][-]{chapter.6}{Conclusion}{}% 20
+\BOOKMARK [1][-]{section.6.1}{Potential Improvements}{chapter.6}% 21
+\BOOKMARK [1][-]{section.6.2}{SAE levels of Autonomy}{chapter.6}% 22
+\BOOKMARK [0][-]{chapter*.24}{Apendix}{}% 23
+\BOOKMARK [1][-]{section.7.1}{wifi access}{chapter*.24}% 24
+\BOOKMARK [1][-]{section.7.2}{Open CV task}{chapter*.24}% 25
+\BOOKMARK [1][-]{section.7.3}{Motor control arduino}{chapter*.24}% 26
+\BOOKMARK [1][-]{section.7.4}{Motor control Pi}{chapter*.24}% 27
+\BOOKMARK [1][-]{section.7.5}{sensors}{chapter*.24}% 28
+\BOOKMARK [1][-]{section.7.6}{Line following}{chapter*.24}% 29
+\BOOKMARK [1][-]{section.7.7}{Symbol detect}{chapter*.24}% 30
+\BOOKMARK [1][-]{section.7.8}{Shape counter}{chapter*.24}% 31
+\BOOKMARK [1][-]{section.7.9}{Stop light detection}{chapter*.24}% 32

@@ -1,0 +1,52 @@
+\begin{thebibliography}{10}
+
+\bibitem{pi_product_page}
+R.~pi~foundation, ``Raspberry pi 3 model b.''
+  \url{https://www.raspberrypi.org/products/raspberry-pi-3-model-b/}.
+\newblock Accessed on 9/05/2020.
+
+\bibitem{pi_product_price}
+the~pi Hut, ``Raspberry pi 3 model b product page.''
+  \url{https://thepihut.com/products/raspberry-pi-3-model-b?src=raspberrypi}.
+\newblock Accessed on 9/05/2020.
+
+\bibitem{GPIO_functions}
+Elinux, ``Rpi bcm2835 gpios.'' \url{https://elinux.org/RPi_BCM2835_GPIOs}.
+\newblock Accessed on 27/04/2020 , Published on 6/04/2020.
+
+\bibitem{ras_pi_schematic}
+R.~pi~foundation, ``Raspberry pi 3 model b+ (reduced schematic).''
+  \url{https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/rpi_SCH_3bplus_1p0_reduced.pdf}.
+\newblock Date created: 19/03/2018.
+
+\bibitem{amp_circuit}
+C.~Basics, ``Build a great sounding audio amplifier from the lm386.''
+  \url{https://www.circuitbasics.com/build-a-great-sounding-audio-amplifier-with-bass-boost-from-the-lm386/}.
+\newblock Accessed on 27/04/2020.
+
+\bibitem{speakers}
+R.~Components, ``Rs components product page.''
+  \url{https://uk.rs-online.com/web/p/miniature-speakers/7243100/}.
+\newblock Accessed on 27/04/2020.
+
+\bibitem{level_shifter}
+Arduino, ``I2c bi-directional level shifter.''
+  \url{https://playground.arduino.cc/Main/I2CBi-directionalLevelShifter/}.
+\newblock Accessed on 21/04/2020.
+
+\bibitem{pi_cam_product}
+R.~pi~foundation, ``Camera module v2.''
+  \url{https://www.raspberrypi.org/products/camera-module-v2/}.
+\newblock Accessed on 9/05/2020.
+
+\bibitem{pi2c}
+J.~Sheppard, ``Raspberry pi c++ library for easy i2c communication to and from
+  an arduino.'' \url{https://github.com/JohnnySheppard/Pi2c}.
+\newblock Accessed on 9/05/2020 , Last edited on 3/11/2014.
+
+\bibitem{h-bridge}
+M.~circuits, ``H-bridges – the basics.''
+  \url{https://www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridges-the-basics/}.
+\newblock Accessed on 09/05/2020.
+
+\end{thebibliography}

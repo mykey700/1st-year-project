@@ -1,0 +1,16 @@
+\BOOKMARK [0][-]{chapter.1}{Subsystem\040design}{}% 1
+\BOOKMARK [1][-]{section.1.1}{circuit}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{placement\040and\040mounting}{chapter.1}% 3
+\BOOKMARK [2][-]{subsection.1.2.1}{Sensor\040to\040servo\040mount}{section.1.2}% 4
+\BOOKMARK [1][-]{section.1.3}{communications}{chapter.1}% 5
+\BOOKMARK [0][-]{chapter.2}{Testing}{}% 6
+\BOOKMARK [1][-]{section.2.1}{7\040segment\040display}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.2}{Ultrasonic\040distance\040sensor}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.3}{Servos}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.4}{Mini-bot\040&\040Communication}{chapter.2}% 10
+\BOOKMARK [0][-]{chapter.3}{Build}{}% 11
+\BOOKMARK [1][-]{section.3.1}{final\040assembly}{chapter.3}% 12
+\BOOKMARK [1][-]{section.3.2}{Code}{chapter.3}% 13
+\BOOKMARK [0][-]{chapter.4}{Appendix}{}% 14
+\BOOKMARK [1][-]{section.4.1}{Testing\040Code}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.2}{Main\040Code}{chapter.4}% 16

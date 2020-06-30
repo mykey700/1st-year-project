@@ -1,0 +1,998 @@
+\input{header.tex}
+
+\begin{document}
+
+\input{titlepage.tex}
+
+\tableofcontents
+
+
+	\chapter{Subsystem design}
+
+\section{circuit}
+
+\begin{figure}[h]%schematic
+	\label{fig:schematic}
+	\begin{center}
+	\includegraphics[width = 1\textwidth]{"assets/schematicAPS"}
+	\caption{circuit schematic}
+	\end{center}
+\end{figure}
+
+figure \ref{fig:schematic} shows the plan for the circuit, as shown the trigger pin for one of the ultrasonic sensors is connected to digital 1 which is the serial write pin. upon testing it was found that despite research this meant that only the serial communication with the Arduino or ultrasonic sensor could work at a time. This became a problem as trouble shooting became  difficult to do, as demonstrated in the remainder of the report.
+
+\section{placement and mounting}
+
+as decided in lab report 1, the servos where to placed it a triangular type layout with one on each back corner and one on at the front. it was found this layout would give the most coverage of the surroundings. as shown in figure \ref{fig:sensor_placement}.
+
+\begin{figure}[h]%placement
+	\label{fig:sensor_placement}
+	\begin{center}
+	\includegraphics[width = 0.5\textwidth]{"assets/sensorplaceAservo"}
+	\caption{Sensor placement}
+	\end{center}
+\end{figure}   
+
+\subsection{Sensor to servo mount}
+
+\begin{figure}[h]%sonicmount
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width = 1\textwidth]{"assets/sonicmount_A"}
+	\centering
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width = 1\textwidth]{"assets/sonicmount_B"}
+	\centering
+\end{minipage}
+\caption{Ultrasonic mount}
+	\label{fig:sonicmount}
+\end{figure}
+
+to mount the ultrasonic sensor the the servos a custom part had to be designed, it took a few iterations and as shown in figure    \ref{fig:sonicmount_withSR-04_A} still does not fit properly, this is due to inaccurate measuring of the sensor and shrinking that occurs with PLA plastics. the piezoelectric crystal does not fit fully, however because the ultrasonic sender and receiver fit properly it doesn't need a redesign.  
+
+\begin{figure}[h]%sonicmount with sr-04
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width = 1\textwidth]{"assets/sonicmount_inside_A"}
+	\centering
+	
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width = 1\textwidth]{"assets/sonicmount_inside_B"}
+	\centering
+\end{minipage}
+\caption{Ultrasonic mount with Sensor}
+	\label{fig:sonicmount_withSR-04_A}
+\end{figure}
+
+\begin{figure}[h]%servomount
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width = 1\textwidth]{"assets/servomount_A"}
+	\centering
+	\caption{Assembly Back}
+	\label{fig:servomount_A}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width = 1\textwidth]{"assets/servomount_B"}
+	\centering
+	\caption{Assembly Front}
+	\label{fig:servomount_B}
+\end{minipage}
+\end{figure}
+
+the Servo mounts are left over from a previous project, to mount them to the PCB holes drilled into the 3d printed part, counter sunk, and then screwed onto already existing holes in the PCB. This is a quick solution to mounting the components as there was no waiting time to print the parts, however for later versions a custom part would be designed at it would fit better.   
+
+\begin{figure}[h]%mount
+	\label{fig:fullmount}
+	\begin{center}
+	\includegraphics[width = 1\textwidth]{"assets/fullmount"}
+	\caption{circuit schematic}
+	\end{center}
+\end{figure}
+
+\section{communications}
+
+On both the main-bot and mini-bots there will be 2 Arduinos, the one for controlling the motors and one for controlling the parking system. This is done for multiple reasons:
+\begin{itemize}
+\item There are not enough pins on an Arduino nano to attach all the sensors for the subsystems and the motors
+\item As the Arduinos are single threaded processors only one thing can be done at a time. 
+\item As multiple subsystems will be attached to the main bot it is easier to develop and test on separate Arduinos.
+\item Adding all the systems code to one Arduino nano, the Arduino might not have enough memory to run and store all the code. 
+\end{itemize}
+
+To communicate between the 2 Ardunios on the mini-bot and the multiple Arduinos on the main-bot an I2c communication system was developed. This consisted of a 3 byte signal from the subsystem Arduino(slave) to the main board Arduino(slave). the byte order was as follows:
+\begin{itemize}
+\item a char for the command
+\item the first byte of a 16bit integer
+\item the second byte of a 16bit integer
+\end{itemize}   
+to send this a function was developed:
+
+\begin{lstlisting}[language=c,caption={i2c communication function},label={i2c communication function}]
+#define I2CADDR 0x08
+	
+void i2cCommand( char command, int Mspeed) {
+  int numa = (Mspeed << 8 ) & 0xff;
+  int numb = Mspeed & 0xff;
+  Wire.beginTransmission(I2CADDR); // transmit to device #8
+  Wire.write(command);
+  Wire.write(numa);
+  Wire.write(numb);
+  Wire.endTransmission();    // stop transmitting
+}
+\end{lstlisting}
+
+as the int passed as Mspeed is not a 16 bit integer split it needs to be split into 2 integers to be sent over i2c.
+
+
+	\chapter{Testing}
+	
+\section{7 segment display}
+
+to test the 7 segment displays they were initially mounted to a breadboard, this did not work as the size of the breadboard made it hard to see what connections where made, and using a multimeter was hard as lots of the wires where very close together.\\
+the display was instead tested on the main board, as some of the connections between the shift register where not the same as the diagram, initially, the display was just displaying random lights, so a diagram was made to find the connections between pins on the display and pins on the shift register, this was then used to make an array corresponding the bits sent to the shift register and numbers displayed on the screen, shown in listing \ref{lst:7seg_digits}.
+
+  \begin{lstlisting}[language=c,caption={7 segment digit array},label={lst:7seg_digits}]
+byte digitA[] = {
+  /*0*/ B10000001, /*1*/ B11001111, /*2*/ B10010010, /*3*/ B10001010, /*4*/ B11001100,
+  /*5*/ B10101000, /*6*/ B10100000, /*7*/ B10001111, /*8*/ B10000000, /*9*/ B10001000,
+  };
+byte digitB[] = {
+  /*0*/ B00100100, /*1*/ B11110110, /*2*/ B01001100, /*3*/ B11000100, /*4*/ B10010110,
+  /*5*/ B10000101, /*6*/ B00000101, /*7*/ B11110100, /*8*/ B00000100, /*9*/ B10000100
+  };
+\end{lstlisting}
+
+This could then be used in all other programs using the 7 segment displays.
+
+\section{Ultrasonic distance sensor}
+
+The Ultrasonic sensors utilised the new ping library. This allowed for a significantly more simple code, as all the code required to get the distance is to initialise the sensor and call the \texttt{ping cm} function, as shown in listing \ref{lst:new_ping}
+
+  \begin{lstlisting}[language=c,caption={New ping usage},label={lst:new_ping}]
+#define TRIGGER_PIN  0  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+data = sonar.ping_cm();
+\end{lstlisting}
+
+\section{Servos}
+
+Using is farily simmilar to the Ultrasonic sensors, the library servo is used, which is included in the Arduino IDE install. All thats need to be done is to as with the ultrasonic Sensors it to initalise the servo and then call the \texttt{} function as shown in listing \ref{lst:servo}
+
+\begin{lstlisting}[language=c,caption={New ping usage},label={lst:new_ping}]
+Servo myservo;  // create servo object to control a servo
+
+//in setup:
+myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  //Serial.begin(9600);
+
+//in loop:
+myservo.write(pos); 
+\end{lstlisting}
+
+\section{Mini-bot \& Communication}
+
+	\chapter{Build}
+
+\section{final assembly}
+
+\begin{figure}[h]%assembly
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width =1\textwidth]{"assets/assembly_back"}
+	\centering
+	\caption{Assembly Back}
+	\label{fig:Assembly_Back}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+	\includegraphics[width =1\textwidth]{"assets/assembly_front"}
+	\centering
+	\caption{Assembly Front}
+	\label{fig:Assembly_Front}
+\end{minipage}
+\end{figure}
+
+All the components are positioned on the PCB to aid assembly and use, although not shown in figure \ref{fig:Assembly_Front} the ultrasonic sensors and servos have ports above the Arduino, they are aligned to have the sensor and servo form each corner to plug into the same plane on the PCB, this makes assembly and disassembly easier as it is easier to put the right cabled into the write places. To provide power to the various components a 5 volt and ground rail are used, this makes the soldering easier as only straight wires would be needed to power any component on the board.\\
+As shown in figure \ref{fig:Assembly_Back} most of the wires where not soldered through the holes in the PCB, this is for multiple reasons:
+\begin{itemize}
+\item some components where too close together
+\item easy to de-solder if a mistake is made
+\item hides messy wires as they would all be on the bottom
+\end{itemize}
+this did not effect durability as much as expected as none of the joints became loose or undone during testing. 
+
+\section{Code}
+
+\begin{figure}[h]%flowchart
+	\label{fig:parking_flowchart}
+	\begin{center}
+	\includegraphics[scale=0.6]{"assets/main_parking_flowchart"}
+	\caption{flowchart}
+	\end{center}
+\end{figure}
+
+There where a few ideas for approaching the code, as the control surfaces for the mini-bot are different to those on the main bot, it was important that the function could park both vehicles. this was quite a challenge. as it was found that the ultrasonic sensors where not very accurate or precise so any system with feedback loops would not be fiable. due to a time crunch the code was simplified to speed up its development. The code represented by \ref{fig:parking_flowchart} shows a simple function for parking the mini bot, as the driven wheels are at the back the mini-bot can turn around on of its back wheels this makes parking much easyer as once the outer wheel is in the final position the car can be manoeuvred around this point. \\
+
+This fact makes parking a lot simpler. in the code shown, the approach it to find a parking spot by reversing until the wall on one side of the car stops, then turns $45\deg$ and continues to reverse until either back corner almost hits the end of the space, then it turns again and adjusts to make the front and back distances equal. to make this system more accurate the servos moved such that the sensors where always perpendicular to the wall. this helps with accuracy as it means the transmitter and receiver half of the sensors are an equal distance to the wall allowing an accurate measurement to be taken. 
+
+	
+	\chapter{Appendix}
+	\section{Testing Code}
+
+\subsection*{7 segment test A}
+
+  \begin{lstlisting}[language=c,caption={7 segment testing code A},label={lst:7seg_test_a}]
+/*  SevenSegmentLEDdisplay102a.ino
+ *   2017-02-20
+ *   Mel Lester Jr.
+ *  Simple example of using Shift Register with a
+ *  Single Digit Seven Segment LED Display
+*/
+// Globals
+const int dataPin = 12;  // blue wire to 74HC595 pin 14
+const int latchPin = 11; // green to 74HC595 pin 12
+const int clockPin = 10; // yellow to 74HC595 pin 11
+
+/* uncomment one of the following lines that describes your display
+ *  and comment out the line that does not describe your display */
+const char common = 'a';    // common anode
+//const char common = 'c';    // common cathode
+
+bool decPt = true;  // decimal point display flag
+ 
+void setup() {
+  // initialize I/O pins
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  decPt = !decPt; // display decimal point every other pass through loop
+
+  // generate characters to display for hexidecimal numbers 0 to F
+  for (int i = 0; i <= 15; i++) {
+    byte bits = myfnNumToBits(i) ;
+    if (decPt) {
+      bits = bits | B00000001;  // add decimal point if needed
+    }
+    myfnUpdateDisplay(bits);    // display alphanumeric dig
+    delay(500);                 // pause for 1/2 second
+  }
+}
+
+void myfnUpdateDisplay(byte eightBits) {
+  if (common == 'a') {                  // using a common anonde display?
+    eightBits = eightBits ^ B11111111;  // then flip all bits using XOR 
+  }
+  digitalWrite(latchPin, LOW);  // prepare shift register for data
+  shiftOut(dataPin, clockPin, LSBFIRST, eightBits); // send data
+  digitalWrite(latchPin, HIGH); // update display
+}
+
+byte myfnNumToBits(int someNumber) {
+  switch (someNumber) {
+    case 0:
+      return B11111100;
+      break;
+    case 1:
+      return B01100000;
+      break;
+    case 2:
+      return B11011010;
+      break;
+    case 3:
+      return B11110010;
+      break;
+    case 4:
+      return B01100110;
+      break;
+    case 5:
+      return B10110110;
+      break;
+    case 6:
+      return B10111110;
+      break;
+    case 7:
+      return B11100000;
+      break;
+    case 8:
+      return B11111110;
+      break;
+    case 9:
+      return B11110110;
+      break;
+    case 10:
+      return B11101110; // Hexidecimal A
+      break;
+    case 11:
+      return B00111110; // Hexidecimal B
+      break;
+    case 12:
+      return B10011100; // Hexidecimal C or use for Centigrade
+      break;
+    case 13:
+      return B01111010; // Hexidecimal D
+      break;
+    case 14:
+      return B10011110; // Hexidecimal E
+      break;
+    case 15:
+      return B10001110; // Hexidecimal F or use for Fahrenheit
+      break;  
+    default:
+      return B10010010; // Error condition, displays three vertical bars
+      break;   
+  }
+}
+\end{lstlisting}
+
+\subsection*{7 segment test B}
+
+  \begin{lstlisting}[language=c,caption={7 segment testing code B},label={lst:7seg_test_b}]
+#define dataPin 12
+#define latchPin 13
+#define clockPin 11
+
+byte digitA[] = {
+  /*0*/ B10000001,
+  /*1*/ B11001111,
+  /*2*/ B10010010,
+  /*3*/ B10001010,
+  /*4*/ B11001100,
+  /*5*/ B10101000,
+  /*6*/ B10100000,
+  /*7*/ B10001111,
+  /*8*/ B10000000,
+  /*9*/ B10001000,
+  };
+byte digitB[] = {
+  /*0*/ B00100100,
+  /*1*/ B11110110,
+  /*2*/ B01001100,
+  /*3*/ B11000100,
+  /*4*/ B10010110,
+  /*5*/ B10000101,
+  /*6*/ B00000101,
+  /*7*/ B11110100,
+  /*8*/ B00000100,
+  /*9*/ B10000100
+  };
+
+void setup() {
+  // initialize I/O pins
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  //count up routine
+  for(int i=0; i < 100; i++){
+    displayNum(i);
+    delay(100);
+  }
+}
+
+void digitdisplay(int A,int B){
+  //ground latchPin and hold low for as long as you are transmitting
+  digitalWrite(latchPin, LOW);
+  digitalWrite(clockPin, LOW);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitB[B]);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitA[A]);
+  //return the latch pin high to signal chip that it
+  //no longer needs to listen for information
+  digitalWrite(latchPin, HIGH);
+  }
+void displayNum(int num){
+  int A = (num / 10)% 10; 
+  int B = num % 10;
+
+  //ground latchPin and hold low for as long as you are transmitting
+  digitalWrite(latchPin, LOW);
+  digitalWrite(clockPin, LOW);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitB[B]);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitA[A]);
+  //return the latch pin high to signal chip that it
+  //no longer needs to listen for information
+  digitalWrite(latchPin, HIGH);
+  }
+\end{lstlisting}
+
+\subsection*{servo test A}
+
+  \begin{lstlisting}[language=c,caption={Servo testing code A},label={lst:servo_test_a}]
+#include <Servo.h>
+
+const int LEFT = A2; 
+const int RIGHT = A3;
+
+Servo myservo;  // create servo object to control a servo
+// twelve servo objects can be created on most boards
+
+int pos = 0;    // variable to store the servo position
+
+int leftVal = 100;    
+int rightVal = 100; 
+
+void setup() {
+  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  //Serial.begin(9600);
+}
+
+void loop() {
+  leftVal = analogRead(LEFT);
+  rightVal = analogRead(RIGHT);
+
+  delay(10);
+  
+  if(leftVal < 5){
+    if (pos < 180){
+      pos ++;
+      myservo.write(pos); 
+    }
+    }
+  else if(rightVal < 5){
+  
+    if (pos >= 0){
+      pos --;
+      myservo.write(pos); 
+    }
+    } 
+}
+\end{lstlisting}
+
+\subsection*{servo test B}
+
+  \begin{lstlisting}[language=c,caption={Servo testing code B},label={lst:servo_test_b}]
+#include <Servo.h>
+
+const int LEFT = A2; 
+const int RIGHT = A3;
+int index = 0;
+
+Servo myservo[3];  // create servo object to control a servo
+// twelve servo objects can be created on most boards
+
+int pos = 0;    // variable to store the servo position
+
+int leftVal = 100;    
+int rightVal = 100; 
+
+void setup() {
+  myservo[0].attach(3);  // attaches the servo on pin 9 to the servo object
+  myservo[1].attach(6);
+  myservo[2].attach(9);
+  //Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  leftVal = analogRead(LEFT);
+  rightVal = analogRead(RIGHT);
+    if (leftVal < 5) {
+      if (index >= 2) {
+        index = 0;
+      } else {
+        index++;
+      }
+  } else if (rightVal < 5) {
+    if (index <= 0) {
+      index = 2;
+    } else {
+      index--;
+    }
+  }
+  sweep(index);
+  flash(100,index+1);
+  delay(1000);
+}
+
+void sweep(int i) {
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    myservo[i].write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+    myservo[i].write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+}
+
+void flash(int frq, int period) {
+  for (int i = 0; i < period; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(frq);                       // wait for a second
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(frq);
+  }
+}
+\end{lstlisting}
+
+\subsection*{Ultrasonic sensor A}
+
+  \begin{lstlisting}[language=c,caption={Sensor testing code A},label={lst:sensor_test_a}]
+/*
+  Ultrasonic Sensor HC-SR04 and Arduino Tutorial
+
+  by Dejan Nedelkovski,
+  www.HowToMechatronics.com
+
+*/
+#define dataPin 12
+#define latchPin 10
+#define clockPin 11
+
+byte digitA[] = {
+  /*0*/ B10000001, /*1*/ B11001111, /*2*/ B10010010, /*3*/ B10001010, /*4*/ B11001100,
+  /*5*/ B10101000, /*6*/ B10100000, /*7*/ B10001111, /*8*/ B10000000, /*9*/ B10001000,
+  };
+byte digitB[] = {
+  /*0*/ B00100100, /*1*/ B11110110, /*2*/ B01001100, /*3*/ B11000100, /*4*/ B10010110,
+  /*5*/ B10000101, /*6*/ B00000101, /*7*/ B11110100, /*8*/ B00000100, /*9*/ B10000100
+  };
+// defines pins numbers
+const int trigPin = 0;
+const int echoPin = 2;
+// defines variables
+long duration;
+int distance;
+void setup() {
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+}
+void loop() {
+  // Clears the trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoPin, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2;
+  // Prints the distance on the Serial Monitor
+  displayNum(distance);
+  delay(500);
+}
+
+void displayNum(int num){
+  int A = (num / 10)% 10; 
+  int B = num % 10;
+
+  //ground latchPin and hold low for as long as you are transmitting
+  digitalWrite(latchPin, LOW);
+  digitalWrite(clockPin, LOW);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitB[B]);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitA[A]);
+  //return the latch pin high to signal chip that it
+  //no longer needs to listen for information
+  digitalWrite(latchPin, HIGH);
+  }
+\end{lstlisting}
+
+\subsection*{Ultrasonic sensor B}
+
+  \begin{lstlisting}[language=c,caption={Sensor testing code B},label={lst:sensor_test_b}]
+#include <NewPing.h>
+
+#define dataPin 12
+#define latchPin 10
+#define clockPin 11
+
+#define TRIGGER_PIN  0  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+
+byte digitA[] = {
+  /*0*/ B10000001, /*1*/ B11001111, /*2*/ B10010010, /*3*/ B10001010, /*4*/ B11001100,
+  /*5*/ B10101000, /*6*/ B10100000, /*7*/ B10001111, /*8*/ B10000000, /*9*/ B10001000,
+  };
+byte digitB[] = {
+  /*0*/ B00100100, /*1*/ B11110110, /*2*/ B01001100, /*3*/ B11000100, /*4*/ B10010110,
+  /*5*/ B10000101, /*6*/ B00000101, /*7*/ B11110100, /*8*/ B00000100, /*9*/ B10000100
+  };
+// defines pins numbers
+const int trigPin = 0;
+const int echoPin = 2;
+// defines variables
+long duration;
+int distance;
+void setup() {
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+}
+
+int data = 0;
+
+void loop() {
+  data = sonar.ping_cm();
+  displayNum(data);
+  delay(500);
+}
+
+void displayNum(int num){
+  int A = (num / 10)% 10; 
+  int B = num % 10;
+
+  //ground latchPin and hold low for as long as you are transmitting
+  digitalWrite(latchPin, LOW);
+  digitalWrite(clockPin, LOW);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitB[B]);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitA[A]);
+  //return the latch pin high to signal chip that it
+  //no longer needs to listen for information
+  digitalWrite(latchPin, HIGH);
+  }
+\end{lstlisting}
+
+\subsection*{Ultrasonic sensor C}
+
+  \begin{lstlisting}[language=c,caption={Sensor testing code C},label={lst:sensor_test_c}]
+#include <NewPing.h>
+
+#define dataPin 12
+#define latchPin 10
+#define clockPin 11
+
+#define TRIGGER_PIN  0  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     2  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+
+byte digitA[] = {
+  /*0*/ B10000001, /*1*/ B11001111, /*2*/ B10010010, /*3*/ B10001010, /*4*/ B11001100,
+  /*5*/ B10101000, /*6*/ B10100000, /*7*/ B10001111, /*8*/ B10000000, /*9*/ B10001000,
+  };
+byte digitB[] = {
+  /*0*/ B00100100, /*1*/ B11110110, /*2*/ B01001100, /*3*/ B11000100, /*4*/ B10010110,
+  /*5*/ B10000101, /*6*/ B00000101, /*7*/ B11110100, /*8*/ B00000100, /*9*/ B10000100
+  };
+// defines pins numbers
+const int trigPin = 0;
+const int echoPin = 2;
+// defines variables
+long duration;
+int distance;
+void setup() {
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+}
+
+int data = 0;
+
+void loop() {
+  data = sonar.ping_cm();
+  displayNum(data);
+  delay(500);
+}
+
+void displayNum(int num){
+  int A = (num / 10)% 10; 
+  int B = num % 10;
+
+  //ground latchPin and hold low for as long as you are transmitting
+  digitalWrite(latchPin, LOW);
+  digitalWrite(clockPin, LOW);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitB[B]);
+  shiftOut(dataPin, clockPin, LSBFIRST, digitA[A]);
+  //return the latch pin high to signal chip that it
+  //no longer needs to listen for information
+  digitalWrite(latchPin, HIGH);
+  }
+\end{lstlisting}
+
+
+	\section{Main Code}
+	
+	\begin{lstlisting}[language=c,caption={Main code},label={lst:full_code}]
+#include <Wire.h>
+#include <Servo.h>
+#include <NewPing.h>
+
+#define SONAR_NUM 3      // Number of sensors.
+#define MAX_DISTANCE 100 // Maximum distance (in cm) to ping.
+
+#define I2CADDR 0x08
+
+//define 7seg pins
+#define DATA_PIN 12
+#define LATCH_PIN 10
+#define CLOCK_PIN 11
+
+
+const int LEFT = A2;
+const int RIGHT = A3;
+
+int leftVal = 100;
+int rightVal = 100;
+
+Servo myservo[3];  // create servo object to control a servo
+// twelve servo objects can be created on most boards
+
+NewPing sonar[SONAR_NUM] = {   // Sensor object array.
+  NewPing(7, 8, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
+  NewPing(4, 5, MAX_DISTANCE),
+  NewPing(13, 2, MAX_DISTANCE)
+};
+
+int Mspeed = 140;
+
+void setup() {
+  // put your setup code here, to run once:
+  Wire.begin(); // join i2c bus (address optional for master)
+
+  // initialize I/O pins
+  pinMode(DATA_PIN, OUTPUT);
+  pinMode(LATCH_PIN, OUTPUT);
+  pinMode(CLOCK_PIN, OUTPUT);
+
+  myservo[0].attach(3);  // attaches the servo on pin 9 to the servo object
+  myservo[1].attach(6);
+  myservo[2].attach(9);
+
+  delay(300);
+  myservo[0].write(0); //right
+  delay(300);
+  myservo[1].write(0); // left
+  delay(300);
+  myservo[2].write(0); // frount
+  delay(3000);
+
+  Serial.begin(9600);
+}
+
+int index = 0;
+void loop() {
+  // put your main code here, to run repeatedly:
+  servoPos(0);
+
+  parkpt1();
+//  leftVal = analogRead(LEFT);
+//  rightVal = analogRead(RIGHT);
+//  if (leftVal < 5 || rightVal < 5) {
+//    parkpt1();
+//    if (index >= 2) {
+//      index = 0;
+//    } else {
+//      index++;
+//    }
+//    switch (index) {
+//      case 0:
+//        displayNum(01);
+//        parkpt1();
+//        break;
+//      case 1:
+//        displayNum(02);
+//        parkpt2();
+//        break;
+//      case 2:
+//        displayNum(03);
+//        parkpt3();
+//        break;
+//    }
+//  }
+//  delay(100);
+}
+
+int parkpt1() {
+  int changeTol = 5;
+  int wallTol = 3;
+  //set servo
+  servoPos(1);
+  //backward
+  i2cCommand('B', Mspeed);
+  Serial.println("going backwards");
+  //check for space
+  
+  int startDist = sonar[1].ping_cm();
+  delay(50);
+  int dist = sonar[1].ping_cm();
+  int change = dist - startDist;
+  while (change < changeTol) {
+    flash(50, 2);
+    dist = sonar[1].ping_cm();
+    change = dist - startDist;
+    displayNum(dist);
+    delay(50);
+  }
+
+  //forward a bit
+  //  i2cCommand('F', Mspeed);
+  //  delay(200);
+   i2cCommand('F', 0);
+}
+
+int parkpt2() {
+  int changeTol = 5;
+  int wallTol = 3;
+  //set servo
+  servoPos(2);
+
+  //45 angle (right backwards)
+  i2cCommand('r', Mspeed);
+  delay(500);
+  i2cCommand('r', 0);
+
+  //backward till a sensor hits wall
+
+  int Ldist = sonar[1].ping_cm();
+  delay(50);
+  int Rdist = sonar[0].ping_cm();
+
+  i2cCommand('B', Mspeed);
+
+  while (Ldist > wallTol && Rdist > wallTol) {
+    flash(50, 2);
+    Ldist = sonar[1].ping_cm();
+    delay(50);
+    Rdist = sonar[0].ping_cm();
+    displayNum(Ldist);
+    delay(50);
+  }
+
+  i2cCommand('F', 0);
+}
+
+
+int parkpt3() {
+  int changeTol = 5;
+  int wallTol = 3;
+  //45 angle (right forwards)
+  i2cCommand('r', -Mspeed);
+  delay(500);
+  i2cCommand('r', 0);
+
+  //set servo
+  servoPos(3);
+
+  //backwards till sensor even
+  int Ldist = sonar[1].ping_cm();
+  delay(50);
+  int Rdist = sonar[0].ping_cm();
+  delay(50);
+  int Frontdist = sonar[2].ping_cm();
+  delay(50);
+  int Backdist = (Rdist + Ldist) / 2;
+
+
+  while ((Backdist - Frontdist) > changeTol) {
+    flash(50, 2);
+    i2cCommand('B', Mspeed);
+    Ldist = sonar[1].ping_cm();
+    delay(50);
+    Rdist = sonar[0].ping_cm();
+    delay(50);
+    Frontdist = sonar[2].ping_cm();
+    delay(50);
+    Backdist = (Rdist + Ldist) / 2;
+  }
+  i2cCommand('F', 0);
+  //forwards till sensors even
+  while ((Frontdist - Backdist) > changeTol) {
+    flash(50, 2);
+    i2cCommand('F', Mspeed);
+    Ldist = sonar[1].ping_cm();
+    delay(50);
+    Rdist = sonar[0].ping_cm();
+    delay(50);
+    Frontdist = sonar[2].ping_cm();
+    delay(50);
+    int Backdist = (Rdist + Ldist) / 2;
+  }
+  i2cCommand('F', 0);
+
+  return 10;
+}
+
+
+void i2cCommand( char command, int Mspeed) {
+  int numa = (Mspeed << 8 ) & 0xff;
+  int numb = Mspeed & 0xff;
+  Wire.beginTransmission(I2CADDR); // transmit to device #8
+  Wire.write(command);
+  Wire.write(numa);
+  Wire.write(numb);
+  Wire.endTransmission();    // stop transmitting
+}
+
+void servoPos(int point) {
+  switch (point) {
+    case 0:
+      displayNum(00);
+      delay(300);
+      myservo[0].write(0); //right
+      delay(300);
+      myservo[1].write(0); // left
+      delay(300);
+      myservo[2].write(0); // frount
+      break;
+    case 1:
+      displayNum(11);
+      delay(300);
+      myservo[0].write(90); //right
+      delay(300);
+      myservo[1].write(0); // left
+      delay(300);
+      myservo[2].write(0); // frount
+      break;
+    case 2:
+      displayNum(22);
+      delay(300);
+      myservo[0].write(45); //right
+      delay(300);
+      myservo[1].write(45); // left
+      delay(300);
+      myservo[2].write(0); // frount
+      break;
+    case 3:
+      displayNum(33);
+      delay(300);
+      myservo[0].write(0); //right
+      delay(300);
+      myservo[1].write(90); // left
+      delay(300);
+      myservo[2].write(0); // frount
+      break;
+  }
+}
+
+//for 7seg display
+byte digitA[] = {
+  /*0*/ B10000001, /*1*/ B11001111, /*2*/ B10010010, /*3*/ B10001010, /*4*/ B11001100,
+  /*5*/ B10101000, /*6*/ B10100000, /*7*/ B10001111, /*8*/ B10000000, /*9*/ B10001000,
+};
+byte digitB[] = {
+  /*0*/ B00100100, /*1*/ B11110110, /*2*/ B01001100, /*3*/ B11000100, /*4*/ B10010110,
+  /*5*/ B10000101, /*6*/ B00000101, /*7*/ B11110100, /*8*/ B00000100, /*9*/ B10000100
+};
+
+void displayNum(int num) {
+  int A = (num / 10) % 10;
+  int B = num % 10;
+
+  if (A >= 9 || A < 0 || B >= 9 || B < 0 ) {
+    flash(50, 4);
+    A = 0;
+    B = 0;
+  }
+
+  //ground latchPin and hold low for as long as you are transmitting
+  digitalWrite(LATCH_PIN, LOW);
+  digitalWrite(CLOCK_PIN, LOW);
+  shiftOut(DATA_PIN, CLOCK_PIN, LSBFIRST, digitB[B]);
+  shiftOut(DATA_PIN, CLOCK_PIN, LSBFIRST, digitA[A]);
+  //return the latch pin high to signal chip that it
+  //no longer needs to listen for information
+  digitalWrite(LATCH_PIN, HIGH);
+}
+
+void flash(int frq, int period) {
+  for (int i = 0; i < period; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(frq);                       // wait for a second
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(frq);
+  }
+}
+\end{lstlisting}
+
+\end{document}

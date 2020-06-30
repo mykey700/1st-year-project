@@ -1,0 +1,169 @@
+
+
+//**********************************//
+//* Sound Reversing Code           *//
+//* for Minibot                    *//
+//*                                *//
+//* UoN 2019 - DF                  *//
+//**********************************//
+
+// name the motor control pins
+#define MRf 7
+#define MRb 5
+#define MLf 8
+#define MLb 6
+
+//bumper pins
+#define left 2
+#define right 3
+
+// name the microphone pin
+#define MIC A6
+
+// define a limit value
+#define LIMIT 1023
+
+// define buzzer
+#define buzzer 9
+
+
+void setup() {
+  // configure the motor control pins as outputs
+  pinMode(MRf, OUTPUT);
+  pinMode(MRb, OUTPUT);
+  pinMode(MLf, OUTPUT);
+  pinMode(MLb, OUTPUT);
+
+  //set bumbers
+  pinMode(left, INPUT_PULLUP);
+  pinMode(right, INPUT_PULLUP);
+
+  //configure buzzer
+  pinMode(buzzer, OUTPUT);
+  
+  int time = 0;
+  while(digitalRead(right) || digitalRead(left))
+  {
+    forward(250);
+    time = time + 250;
+  }
+
+  forward(time);
+}
+
+void loop() {
+  }
+
+  void wobble(int time, int amp) {
+    int timed = 0;
+    while (timed < time) {
+      digitalWrite(MRb, LOW);
+      digitalWrite(MLf, LOW);
+
+      digitalWrite(MRf, HIGH);
+      digitalWrite(MLb, HIGH);
+      delay(amp);
+      digitalWrite(MRf, LOW);
+      digitalWrite(MLb, LOW);
+
+      digitalWrite(MRb, HIGH);
+      digitalWrite(MLf, HIGH);
+      delay(amp);
+      digitalWrite(MRb, LOW);
+      digitalWrite(MLf, LOW);
+      timed = timed + amp + amp;
+    }
+  }
+
+  void forward(int time) {
+    digitalWrite(MRb, LOW);
+    digitalWrite(MLb, LOW);
+
+    digitalWrite(MRf, HIGH);
+    digitalWrite(MLf, HIGH);
+
+    if (time != 0) {
+      delay(time);
+      digitalWrite(MRf, LOW);
+      digitalWrite(MLf, LOW);
+    }
+
+
+  }
+
+  void reverce(int time) {
+    digitalWrite(MRf, LOW);
+    digitalWrite(MLf, LOW);
+
+    digitalWrite(MRb, HIGH);
+    digitalWrite(MLb, HIGH);
+
+    if (time != 0) {
+      delay(time);
+      digitalWrite(MRf, LOW);
+      digitalWrite(MLf, LOW);
+    }
+
+  }
+
+  void turnleft(int time) {
+    digitalWrite(MRb, LOW);
+    digitalWrite(MLb, LOW);
+    digitalWrite(MLf, LOW);
+
+    digitalWrite(MRf, HIGH);
+
+    if (time != 0) {
+      delay(time);
+      digitalWrite(MRf, LOW);
+    }
+  }
+
+  void turnright(int time) {
+    digitalWrite(MRb, LOW);
+    digitalWrite(MLb, LOW);
+    digitalWrite(MRf, LOW);
+
+    digitalWrite(MLf, HIGH);
+
+    if (time != 0) {
+      delay(time);
+      digitalWrite(MLf, LOW);
+    }
+  }
+
+  void turnleftB(int time) {
+    digitalWrite(MRf, LOW);
+    digitalWrite(MLb, LOW);
+    digitalWrite(MLf, LOW);
+
+    digitalWrite(MRb, HIGH);
+
+    if (time != 0) {
+      delay(time);
+      digitalWrite(MRb, LOW);
+    }
+  }
+
+  void turnrightB(int time) {
+    digitalWrite(MRb, LOW);
+    digitalWrite(MLf, LOW);
+    digitalWrite(MRf, LOW);
+
+    digitalWrite(MLb, HIGH);
+
+    if (time != 0) {
+      delay(time);
+      digitalWrite(MLb, LOW);
+    }
+  }
+
+
+  void buzzing(int freq) {
+    tone(buzzer, freq);
+    delay(750);
+    noTone(buzzer);
+  }
+
+
+

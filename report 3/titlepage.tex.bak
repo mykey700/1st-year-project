@@ -1,0 +1,68 @@
+\begin{titlepage} % Suppresses headers and footers on the title page
+
+	\centering % Centre everything on the title page
+	
+	\scshape % Use small caps for all text on the title page
+	
+	
+	\includegraphics[scale=0.2,right]{"assets/UoN eee".png}
+	
+	%------------------------------------------------
+	%	Title
+	%------------------------------------------------
+	 
+	\rule{\textwidth}{2pt}\vspace*{-\baselineskip}\vspace*{2pt} % Thick horizontal rule
+	
+	\vspace{0.75\baselineskip} % Whitespace above the title
+	
+	{\LARGE Applied EEE Construction Project:\\ Lab Report 3: \\ \ Line following using OpenCV and level of autonomy\\} % Title
+	
+	\vspace{0.75\baselineskip} % Whitespace below the title
+	
+	\rule{\textwidth}{2pt} % Thick horizontal rule
+	
+	\vspace{2\baselineskip} % Whitespace after the title block
+	
+	%------------------------------------------------
+	%	Subtitle
+	%------------------------------------------------
+	
+	Lab report from sessions 5 \& 6 of the applied EEE construction Project % Subtitle or further description
+	
+	\vspace*{3\baselineskip} % Whitespace under the subtitle
+	
+	%------------------------------------------------
+	%	Editor(s)
+	%------------------------------------------------
+	
+
+	
+	\vspace{0.5\baselineskip} % Whitespace before the editors
+	
+	{\scshape\Large Michael Bagge-Hansen } % Editor list
+
+	\href{mailto:eeymb8@Nottingham.ac.uk}{eeymb8@Nottingham.ac.uk}
+	
+	\vspace{1\baselineskip}
+	
+	Abstract: \\
+	\textit{A summary of the tasks undertaken in Sessions 5 \& 6. Adding a Raspberry Pi to the vehicle with a camera to complete computer vision tasks, allowing the vehicle to become autonomous. \\ The line following system was not completed due to a lack of fine motor adjustment therefore overcorrecting for the changes in line. Other systems, Symbol detection, Stop light detection and Shape counting was developed with few problems.   
+	}	
+	
+	\vfill % Whitespace between editor names and publisher logo
+
+	
+	
+	%------------------------------------------------
+	%	Publisher
+	%------------------------------------------------
+	
+%	\plogo % Publisher logo
+	
+	\vspace{0.3\baselineskip} % Whitespace under the publisher logo
+	
+	April 2020 % Publication date
+	
+	{\large The University of Nottingham} % Publisher
+
+\end{titlepage}
