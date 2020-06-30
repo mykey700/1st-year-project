@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+echo "EEE Raspberry Pi Finder"
+echo "This service allows you to find the IP address of your Pi without a display."
+read -p "Please enter your University of Nottingham username: " USERNAME
+
+read -p "You entered \"$USERNAME\", is this correct? (y/n)? " RESP
+
+if [ "$RESP" == "y" ] || [ "$RESP" == "Y" ]; then
+	echo $USERNAME > /etc/pifinder_username
+	pifinder_submit
+
+	echo "Go to http://pifinder.eee.nottingham.ac.uk to find your IP address."
+fi
+

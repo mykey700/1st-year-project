@@ -1,0 +1,50 @@
+<html>
+<script>
+    var scriptString = 'THIS IS MY STRING';
+    function move(dir, speed,time){
+        document.getElementById("box").innerText = "moving:" + dir;
+        var xmlhttp = new XMLHttpRequest();
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("term").innerHTML = this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "move.php?d=" + dir +"&s="+ speed +"&t="+ time , true);
+        xmlhttp.send();
+    }
+</script>
+
+<body>
+<div id="box">
+    box
+</div>
+<div id = "term">
+    term
+</div>
+
+<script>
+    document.addEventListener('keydown', (event) => {
+        document.getElementById("box").innerText = "press";
+        if(event.key == 'ArrowUp'){
+            document.getElementById("box").innerText = "Up";
+            move('f',30,0.2);
+        }
+        if(event.key == 'ArrowDown'){
+            document.getElementById("box").innerText = "Down";
+            move('b',30,0.2);
+        }
+        if(event.key == 'ArrowLeft'){
+            document.getElementById("box").innerText = "Left";
+            move('l',30,0.2);
+        }
+        if(event.key == 'ArrowRight'){
+            document.getElementById("box").innerText = "Right";
+            move('r',30,0.2);
+        }
+    });
+</script>
+
+</body>
+
+</html>

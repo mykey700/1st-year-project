@@ -1,0 +1,28 @@
+<html>
+<head>
+
+        <script>
+                
+        function myFunction() {
+            document.getElementById("but").innerHTML = "YOU CLICKED ME!";
+            $.ajax({
+                    type: "POST", 
+                    url: "myscript.php",  
+                    data: {
+                        var1  :val1
+                    },
+                    success: function(response){
+                        // do something
+                        document.getElementById("but").innerHTML = "Ajax worked!";
+                    }
+                })
+        }
+        </script>
+
+</head>
+
+<body>
+    <button id ="but" onclick="myFunction()">press</button> 
+</body>
+
+</html>

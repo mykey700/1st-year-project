@@ -1,0 +1,12 @@
+
+case "${reason}" in
+	BOUND)
+		/usr/local/bin/pifinder_submit
+		;;
+	REBOOT)
+		/usr/local/bin/pifinder_submit
+		;;
+	*)
+		echo -n
+		;;
+esac

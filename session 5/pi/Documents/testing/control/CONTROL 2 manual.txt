@@ -1,0 +1,14 @@
+CONTROL 2
+
+SYNOPSIS
+    control_2 [direction] [flag] value
+
+DIRECTION
+    f - goes forward
+    b - goes backward
+    l - tunrs left
+    r - tunrs right
+
+FLAG
+    -s - set speed
+    -t - set time

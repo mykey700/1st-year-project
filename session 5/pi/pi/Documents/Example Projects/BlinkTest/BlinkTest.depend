@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1549800253 source:/home/pi/Documents/Example Projects/BlinkTest/main.cpp
+	<iostream>
+	<wiringPi.h>
+	"pi2c.h"
+
+1518022116 /usr/local/include/wiringPi.h
+
+1549800253 /home/pi/Documents/Example Projects/BlinkTest/pi2c.h
+	<iostream>
+	<linux/i2c-dev.h>
+	<fcntl.h>
+	<unistd.h>
+	<sys/ioctl.h>
+
