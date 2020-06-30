@@ -1,0 +1,5 @@
+get fretures from feature detect
+get mean and standard deviation 
+    of freatue cordanates 
+mask around mean distance
+find most common color

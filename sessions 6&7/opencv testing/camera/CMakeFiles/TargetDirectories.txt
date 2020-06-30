@@ -1,0 +1,3 @@
+/home/mkyey/Software/opencv/samples/cpp/example_cmake/CMakeFiles/rebuild_cache.dir
+/home/mkyey/Software/opencv/samples/cpp/example_cmake/CMakeFiles/opencv_example.dir
+/home/mkyey/Software/opencv/samples/cpp/example_cmake/CMakeFiles/edit_cache.dir

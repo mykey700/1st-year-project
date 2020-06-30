@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( count_shapes )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( countShapes count.cpp )
+target_link_libraries( countShapes ${OpenCV_LIBS})

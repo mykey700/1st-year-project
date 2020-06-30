@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( FeatureDetect )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( HSVtool HSV.cpp )
+target_link_libraries( HSVtool ${OpenCV_LIBS} )

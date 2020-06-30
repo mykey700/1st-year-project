@@ -1,0 +1,3 @@
+/home/mkyey/Documents/eee/Project/sessions 6&7/Shapes/CMakeFiles/rebuild_cache.dir
+/home/mkyey/Documents/eee/Project/sessions 6&7/Shapes/CMakeFiles/countShapes.dir
+/home/mkyey/Documents/eee/Project/sessions 6&7/Shapes/CMakeFiles/edit_cache.dir

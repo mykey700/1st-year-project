@@ -1,0 +1,3 @@
+/home/pi/Documents/stop light/CMakeFiles/rebuild_cache.dir
+/home/pi/Documents/stop light/CMakeFiles/stopLights.dir
+/home/pi/Documents/stop light/CMakeFiles/edit_cache.dir

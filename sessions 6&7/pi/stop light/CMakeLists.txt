@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( stop_lights )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( stopLights lights.cpp )
+target_link_libraries( stopLights ${OpenCV_LIBS})

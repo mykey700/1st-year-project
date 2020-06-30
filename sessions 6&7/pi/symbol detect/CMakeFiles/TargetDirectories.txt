@@ -1,0 +1,3 @@
+/home/pi/Documents/symbol detect/CMakeFiles/rebuild_cache.dir
+/home/pi/Documents/symbol detect/CMakeFiles/symbolDetect.dir
+/home/pi/Documents/symbol detect/CMakeFiles/edit_cache.dir

@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( line_follow )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( linefollow Linefollow.cpp )
+target_link_libraries( linefollow ${OpenCV_LIBS})

@@ -1,0 +1,3 @@
+/home/mkyey/Documents/eee/Project/sessions 6&7/stop light/CMakeFiles/rebuild_cache.dir
+/home/mkyey/Documents/eee/Project/sessions 6&7/stop light/CMakeFiles/stopLights.dir
+/home/mkyey/Documents/eee/Project/sessions 6&7/stop light/CMakeFiles/edit_cache.dir
